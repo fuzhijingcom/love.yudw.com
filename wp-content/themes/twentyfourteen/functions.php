@@ -1,4 +1,30 @@
 <?php
+function keep_id_continuous(){
+    global $wpdb;
+    $lastID = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' OR post_status = 'draft' OR post_status = 'private' OR ( post_status = 'inherit' AND post_type = 'attachment' ) ORDER BY ID DESC LIMIT 1");
+    $wpdb->query("DELETE FROM $wpdb->posts WHERE ( post_status = 'auto-draft' OR ( post_status = 'inherit' AND post_type = 'revision' ) ) AND ID > $lastID");
+    $lastID++;
+    $wpdb->query("ALTER TABLE $wpdb->posts AUTO_INCREMENT = $lastID");
+}
+// 将函数钩在新建文章、上传媒体和自定义菜单之前。
+add_filter( 'load-post-new.php', 'keep_id_continuous' );
+add_filter( 'load-media-new.php', 'keep_id_continuous' );
+add_filter( 'load-nav-menus.php', 'keep_id_continuous' );
+// 禁用自动保存，所以编辑长文章前请注意手动保存。
+add_action( 'admin_print_scripts', create_function( '$a', "wp_deregister_script('autosave');" ) );
+// 禁用修订版本
+remove_action( 'pre_post_update' , 'wp_save_post_revision' );
+
+// WordPress连续ID，禁用草稿功能函数结束
+
+// 使WordPress在原生编辑器（tiny）下发表文章时，不去除空格
+add_filter('tiny_mce_before_init', 'preserve_nbsp_chars');
+function preserve_nbsp_chars($initArray) {
+    $initArray['entities'] = '160,nbsp,'.$initArray['entities'];
+    return $initArray;
+}
+
+
 /*******************************
  PHP5以后时间纠正方法
 ********************************/

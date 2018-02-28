@@ -79,6 +79,11 @@ define('WPLANG', 'zh_CN');
  */
 define('WP_DEBUG', false);
 
+/** Disable autosave and revision */
+
+define( 'AUTOSAVE_INTERVAL', false );
+define('WP_POST_REVISIONS', false );
+
 /**
  * zh_CN本地化设置：启用ICP备案号显示
  *

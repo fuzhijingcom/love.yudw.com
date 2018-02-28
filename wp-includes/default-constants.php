@@ -274,10 +274,10 @@ function wp_functionality_constants() {
 	 * @since 2.9.0
 	 */
 	if ( !defined( 'EMPTY_TRASH_DAYS' ) )
-		define( 'EMPTY_TRASH_DAYS', 30 );
+		define( 'EMPTY_TRASH_DAYS', false );
 
 	if ( !defined('WP_POST_REVISIONS') )
-		define('WP_POST_REVISIONS', true);
+		define('WP_POST_REVISIONS', false);
 
 	/**
 	 * @since 3.3.0
